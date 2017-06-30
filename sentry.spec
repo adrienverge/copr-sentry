@@ -6,7 +6,7 @@
 
 Name:            %{name}
 Version:         8.17.0
-Release:         1%{?dist}
+Release:         2%{?dist}
 Summary:         A realtime logging and aggregation server
 
 License:         BSD
@@ -56,6 +56,7 @@ pip --version
 # Build with gcc (not clang), https://github.com/getsentry/libsourcemap/pull/8
 export LIBSOURCEMAP_MANYLINUX=1 SYMSYND_MANYLINUX=1
 pip install 'sentry[postgres]==%{version}'
+pip install sentry-plugins
 pip install https://github.com/getsentry/sentry-auth-google/archive/master.zip
 pip install https://github.com/getsentry/sentry-auth-github/archive/master.zip
 
@@ -123,6 +124,9 @@ getent passwd %{name} >/dev/null || \
 
 
 %changelog
+* Fri Jun 30 2017 Adrien Vergé <adrienverge@gmail.com> - 8.17.0-2
+- Add Sentry plugins
+
 * Fri Jun 30 2017 Adrien Vergé <adrienverge@gmail.com> - 8.17.0-1
 - Update to new upstream version
 - Add SSO providers for Google and GitHub
