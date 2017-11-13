@@ -5,8 +5,8 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 
 Name:            %{name}
-Version:         8.17.0
-Release:         3%{?dist}
+Version:         8.21.0
+Release:         1%{?dist}
 Summary:         A realtime logging and aggregation server
 
 License:         BSD
@@ -124,6 +124,9 @@ getent passwd %{name} >/dev/null || \
 
 
 %changelog
+* Mon Nov 13 2017 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-1
+- Update to new upstream version
+
 * Mon Nov 13 2017 Adrien Vergé <adrienverge@gmail.com> - 8.17.0-3
 - Tell systemd to create /run/sentry (otherwise supervisord crashes)
 
