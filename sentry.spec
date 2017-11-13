@@ -6,7 +6,7 @@
 
 Name:            %{name}
 Version:         8.21.0
-Release:         1%{?dist}
+Release:         2%{?dist}
 Summary:         A realtime logging and aggregation server
 
 License:         BSD
@@ -29,6 +29,7 @@ BuildRequires:   python-virtualenv
 BuildRequires:   systemd
 BuildRequires:   zlib-devel
 
+Requires:        postgresql-contrib
 Requires:        postgresql-server
 Requires:        python-psycopg2
 Requires:        redis
@@ -124,6 +125,9 @@ getent passwd %{name} >/dev/null || \
 
 
 %changelog
+* Mon Nov 13 2017 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-2
+- Add postgresql-contrib requirement, see https://github.com/getsentry/sentry/issues/6098
+
 * Mon Nov 13 2017 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-1
 - Update to new upstream version
 
