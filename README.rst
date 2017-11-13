@@ -24,3 +24,6 @@ Hack
 
  rpmbuild -bs sentry.spec
  mock -r epel-7-x86_64 rebuild ~/rpmbuild/SRPMS/sentry-8*.src.rpm
+
+You may need ``config_opts['rpmbuild_networking'] = True`` in
+``/etc/mock/site-defaults.cfg``.
