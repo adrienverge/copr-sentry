@@ -6,7 +6,7 @@
 
 Name:            %{name}
 Version:         8.17.0
-Release:         2%{?dist}
+Release:         3%{?dist}
 Summary:         A realtime logging and aggregation server
 
 License:         BSD
@@ -124,6 +124,9 @@ getent passwd %{name} >/dev/null || \
 
 
 %changelog
+* Mon Nov 13 2017 Adrien Vergé <adrienverge@gmail.com> - 8.17.0-3
+- Tell systemd to create /run/sentry (otherwise supervisord crashes)
+
 * Fri Jun 30 2017 Adrien Vergé <adrienverge@gmail.com> - 8.17.0-2
 - Add Sentry plugins
 

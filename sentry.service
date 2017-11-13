@@ -7,6 +7,7 @@ User=sentry
 Group=sentry
 KillMode=process
 Restart=on-failure
+RuntimeDirectory=sentry
 
 [Install]
 WantedBy=multi-user.target
