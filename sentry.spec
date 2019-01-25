@@ -1,9 +1,5 @@
 %global name sentry
 
-# Turn off the brp-python-bytecompile script because it compiles
-# /etc/sentry/sentry.conf.py. Compile manually with % py_byte_compile.
-%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
-
 Name:            %{name}
 Version:         8.21.0
 Release:         2%{?dist}
@@ -80,9 +76,6 @@ install -D -m 644 %{SOURCE0} %{buildroot}%{_unitdir}/%{name}.service
 mkdir -p %{buildroot}/run/%{name}
 mkdir -p %{buildroot}%{_localstatedir}/log/%{name}
 
-# Problem with this macro, it is not expanded, like it doesn't exist...
-#% py_byte_compile %{__python2} %{buildroot}/opt/%{name}/lib
-
 # For some reason this lib is not readable
 chmod a+r \
   %{buildroot}/opt/%{name}/lib/python2.7/site-packages/httplib2/* \
@@ -99,6 +92,8 @@ sed -i 's|/builddir/build/BUILD/%{name}-%{version}|/opt/%{name}|g' \
 
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(0644, %{name}, %{name}) %{_sysconfdir}/%{name}/sentry.conf.py
+%exclude %{_sysconfdir}/%{name}/sentry.conf.pyc
+%exclude %{_sysconfdir}/%{name}/sentry.conf.pyo
 %config(noreplace) %attr(0644, %{name}, %{name}) %{_sysconfdir}/%{name}/config.yml
 %config %attr(0644, %{name}, %{name}) %{_sysconfdir}/%{name}/supervisord.conf
 
