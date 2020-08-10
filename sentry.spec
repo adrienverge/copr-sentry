@@ -1,8 +1,8 @@
 %global name sentry
 
 Name:            %{name}
-Version:         8.21.0
-Release:         3%{?dist}
+Version:         9.1.2
+Release:         1%{?dist}
 Summary:         A realtime logging and aggregation server
 
 License:         BSD
@@ -112,6 +112,9 @@ getent passwd %{name} >/dev/null || \
 
 
 %changelog
+* Mon Aug 10 2020 Adrien Vergé <adrienverge@gmail.com> - 9.1.2-1
+- Update to version 9.1.2
+
 * Mon Aug 10 2020 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-3
 - Adapt and rebuild for CentOS 8
 
