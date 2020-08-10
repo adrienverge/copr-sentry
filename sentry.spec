@@ -1,7 +1,7 @@
 %global name sentry
 
 Name:            %{name}
-Version:         9.1.2
+Version:         10.0.1
 Release:         1%{?dist}
 Summary:         A realtime logging and aggregation server
 
@@ -112,6 +112,9 @@ getent passwd %{name} >/dev/null || \
 
 
 %changelog
+* Mon Aug 10 2020 Adrien Vergé <adrienverge@gmail.com> - 10.0.1-1
+- Update to version 10.0.1
+
 * Mon Aug 10 2020 Adrien Vergé <adrienverge@gmail.com> - 9.1.2-1
 - Update to version 9.1.2
 
