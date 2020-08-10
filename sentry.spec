@@ -2,7 +2,7 @@
 
 Name:            %{name}
 Version:         8.21.0
-Release:         2%{?dist}
+Release:         3%{?dist}
 Summary:         A realtime logging and aggregation server
 
 License:         BSD
@@ -11,23 +11,17 @@ Source0:         %{name}.service
 Source1:         supervisord.conf
 BuildArch:       x86_64
 
-BuildRequires:   libffi-devel
 BuildRequires:   libjpeg-devel
-BuildRequires:   libpqxx-devel
-BuildRequires:   libxml2-devel
-BuildRequires:   libxslt-devel
-BuildRequires:   libyaml-devel
-BuildRequires:   openssl-devel
-BuildRequires:   postgresql-devel
+BuildRequires:   libpq-devel
+BuildRequires:   libtool-ltdl-devel
 BuildRequires:   python2-devel
-BuildRequires:   python-pip
-BuildRequires:   python-virtualenv
-BuildRequires:   systemd
+BuildRequires:   python2-pip
+BuildRequires:   python2-virtualenv
+BuildRequires:   xmlsec1-devel
 BuildRequires:   zlib-devel
 
 Requires:        postgresql-contrib
 Requires:        postgresql-server
-Requires:        python-psycopg2
 Requires:        redis
 Requires:        supervisor
 
@@ -36,28 +30,30 @@ Requires(post):  systemd
 Requires(preun): systemd
 
 
+# Do not include debuginfo symlinks from /usr/lib/.build-id because they
+# conflict with python2 package:
+%define _build_id_links none
+
+
 %description
 Sentry is a modern error logging and aggregation platform.
 
 
 %build
-virtualenv %{name}-%{version}
+virtualenv-2 %{name}-%{version}
 cd %{name}-%{version}
 source bin/activate
 
-# Needs pip >= 9
-pip --version
-pip install --upgrade pip
-pip --version
-
 # Build with gcc (not clang), https://github.com/getsentry/libsourcemap/pull/8
 export LIBSOURCEMAP_MANYLINUX=1 SYMSYND_MANYLINUX=1
-pip install 'sentry[postgres]==%{version}'
-pip install sentry-plugins
-pip install https://github.com/getsentry/sentry-auth-google/archive/master.zip
-pip install https://github.com/getsentry/sentry-auth-github/archive/master.zip
+pip2 install \
+  psycopg2 \
+  'sentry[postgres]==%{version}' \
+  sentry-plugins==8.21.0 \
+  https://github.com/getsentry/sentry-auth-google/archive/52020f5.zip \
+  https://github.com/getsentry/sentry-auth-github/archive/master.zip
 
-virtualenv --relocatable .
+virtualenv-2 --relocatable .
 
 
 %install
@@ -76,13 +72,11 @@ install -D -m 644 %{SOURCE0} %{buildroot}%{_unitdir}/%{name}.service
 mkdir -p %{buildroot}/run/%{name}
 mkdir -p %{buildroot}%{_localstatedir}/log/%{name}
 
-# For some reason this lib is not readable
-chmod a+r \
-  %{buildroot}/opt/%{name}/lib/python2.7/site-packages/httplib2/* \
-  %{buildroot}/opt/%{name}/lib/python2.7/site-packages/httplib2-*.egg-info/*
-
 sed -i 's|/builddir/build/BUILD/%{name}-%{version}|/opt/%{name}|g' \
   $(grep -lrIE '/builddir/build/BUILD/%{name}-%{version}' %{buildroot}/opt)
+
+sed -i 's|^#!/usr/bin/env python$|#!/usr/bin/env python2.7|g' \
+  $(grep -lrIE '^#!/usr/bin/env python$' %{buildroot}/opt)
 
 
 %files
@@ -92,8 +86,6 @@ sed -i 's|/builddir/build/BUILD/%{name}-%{version}|/opt/%{name}|g' \
 
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(0644, %{name}, %{name}) %{_sysconfdir}/%{name}/sentry.conf.py
-%exclude %{_sysconfdir}/%{name}/sentry.conf.pyc
-%exclude %{_sysconfdir}/%{name}/sentry.conf.pyo
 %config(noreplace) %attr(0644, %{name}, %{name}) %{_sysconfdir}/%{name}/config.yml
 %config %attr(0644, %{name}, %{name}) %{_sysconfdir}/%{name}/supervisord.conf
 
@@ -120,6 +112,9 @@ getent passwd %{name} >/dev/null || \
 
 
 %changelog
+* Mon Aug 10 2020 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-3
+- Adapt and rebuild for CentOS 8
+
 * Mon Nov 13 2017 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-2
 - Add postgresql-contrib requirement, see https://github.com/getsentry/sentry/issues/6098
 
