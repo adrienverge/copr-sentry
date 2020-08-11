@@ -2,13 +2,14 @@
 
 Name:            %{name}
 Version:         8.21.0
-Release:         4%{?dist}
+Release:         5%{?dist}
 Summary:         A realtime logging and aggregation server
 
 License:         BSD
 URL:             https://pypi.python.org/pypi/sentry
 Source0:         %{name}.service
 Source1:         supervisord.conf
+Source2:         00001-fix-wsgi-crash.patch
 BuildArch:       x86_64
 
 BuildRequires:   libjpeg-devel
@@ -51,6 +52,8 @@ pip2 install \
   'sentry[postgres]==%{version}' \
   sentry-plugins==8.21.0 \
   https://github.com/getsentry/sentry-auth-google/archive/52020f5.zip
+
+patch -p1 -i %SOURCE2
 
 virtualenv-2 --relocatable .
 
@@ -111,6 +114,9 @@ getent passwd %{name} >/dev/null || \
 
 
 %changelog
+* Tue Aug 11 2020 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-5
+- Add a patch to fix a WSGI crash when fetching assets
+
 * Tue Aug 11 2020 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-4
 - Remove sentry-auth-github, that causes error logs
 

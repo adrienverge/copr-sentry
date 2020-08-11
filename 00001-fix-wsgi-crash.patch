@@ -1,0 +1,21 @@
+Fix a crash when fetching assets (JavaScript files, styles, etc.):
+
+    Traceback (most recent call last):
+      File "/opt/sentry/lib/python2.7/site-packages/raven/middleware.py", line 98, in __call__
+        iterable = self.application(environ, start_response)
+      File "/opt/sentry/lib/python2.7/site-packages/sentry/wsgi.py", line 44, in __call__
+        response = environ['wsgi.file_wrapper'](response.streaming_content)
+    AttributeError: object has no attribute 'read'
+    127.0.0.1 - - [11/Aug/2020:07:52:19 +0000] "GET /_static/1597132337/sentry/dist/app.js ...
+
+--- a/lib/python2.7/site-packages/sentry/wsgi.py
++++ b/lib/python2.7/site-packages/sentry/wsgi.py
+@@ -42,7 +42,7 @@ class FileWrapperWSGIHandler(WSGIHandler):
+         if hasattr(response, 'streaming') and response.streaming:
+             try:
+                 response = environ['wsgi.file_wrapper'](response.streaming_content)
+-            except KeyError:
++            except (KeyError, AttributeError):
+                 # In our case, we're shipping with uwsgi, so it's safer to assume
+                 # that wsgi.file_wrapper does exist. It'd be exceptional otherwise.
+                 pass
