@@ -2,7 +2,7 @@
 
 Name:            %{name}
 Version:         8.21.0
-Release:         3%{?dist}
+Release:         4%{?dist}
 Summary:         A realtime logging and aggregation server
 
 License:         BSD
@@ -50,8 +50,7 @@ pip2 install \
   psycopg2 \
   'sentry[postgres]==%{version}' \
   sentry-plugins==8.21.0 \
-  https://github.com/getsentry/sentry-auth-google/archive/52020f5.zip \
-  https://github.com/getsentry/sentry-auth-github/archive/master.zip
+  https://github.com/getsentry/sentry-auth-google/archive/52020f5.zip
 
 virtualenv-2 --relocatable .
 
@@ -112,6 +111,9 @@ getent passwd %{name} >/dev/null || \
 
 
 %changelog
+* Tue Aug 11 2020 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-4
+- Remove sentry-auth-github, that causes error logs
+
 * Mon Aug 10 2020 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-3
 - Adapt and rebuild for CentOS 8
 
