@@ -2,7 +2,7 @@
 
 Name:            %{name}
 Version:         8.21.0
-Release:         5%{?dist}
+Release:         6%{?dist}
 Summary:         A realtime logging and aggregation server
 
 License:         BSD
@@ -21,6 +21,7 @@ BuildRequires:   python2-virtualenv
 BuildRequires:   xmlsec1-devel
 BuildRequires:   zlib-devel
 
+Requires:        glibc(x86-32)
 Requires:        postgresql-contrib
 Requires:        postgresql-server
 Requires:        redis
@@ -114,6 +115,9 @@ getent passwd %{name} >/dev/null || \
 
 
 %changelog
+* Tue Aug 13 2020 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-6
+- Add glibc.i686 to requirements to allow installation from COPR
+
 * Tue Aug 11 2020 Adrien Vergé <adrienverge@gmail.com> - 8.21.0-5
 - Add a patch to fix a WSGI crash when fetching assets
 
